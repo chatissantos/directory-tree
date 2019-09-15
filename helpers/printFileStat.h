@@ -1,0 +1,1 @@
+void printFileStat(char* fileName);

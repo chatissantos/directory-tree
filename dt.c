@@ -1,29 +1,9 @@
 #import <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <ctype.h>
 #include <string.h>
-#include <dirent.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-
-void printError(char* message);
-void printDir(
-        char* directory
-        , int symbolicLinkFlag
-        , int timeFlag
-        , int gidFlag
-        , int numberOfLinksFlag
-        , int permissionFlag
-        , int sizeFlag
-        , int fileTypeFlag
-        , int uidFlag
-        , int lflag
-        , int indentSize
-        , int currentIndentSize
-);
-void pintFileStat(char* fileName);
-
+#include "helpers/printError.h"
+#include "helpers/printDir.h"
 
 int main(int argc, char *argv[]) {
     int symbolicLinkFlag = 0, timeFlag = 0, gidFlag = 0, numberOfLinksFlag = 0, permissionFlag = 0, sizeFlag = 0, fileTypeFlag = 0, uidFlag = 0, lflag = 0, indentSize = 4;
@@ -40,43 +20,33 @@ int main(int argc, char *argv[]) {
                     printError("Argument supplied to option I is not a number");
                     return -1;
                 }
-                printf("indent size: %d\n", indentSize);
                 break;
             case 'L':
                 symbolicLinkFlag = 1;
-                printf("Follow symbolic links flag\n");
                 break;
             case 'd':
                 timeFlag = 1;
-                printf("time last modified flag\n");
                 break;
             case 'g':
                 gidFlag = 1;
-                printf("g flag\n");
                 break;
             case 'i':
                 numberOfLinksFlag = 1;
-                printf("i flag\n");
                 break;
             case 'p':
                 permissionFlag = 1;
-                printf("p flag\n");
                 break;
             case 's':
                 sizeFlag = 1;
-                printf("s flag\n");
                 break;
             case 't':
                 fileTypeFlag = 1;
-                printf("t flag\n");
                 break;
             case 'u':
                 uidFlag = 1;
-                printf("u flag\n");
                 break;
             case 'l':
                 lflag = 1;
-                printf("l flag\n");
                 break;
             case ':':
                 printError("option needs a value");
@@ -95,74 +65,4 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-void printDir(
-        char* directory
-        , int symbolicLinkFlag
-        , int timeFlag
-        , int gidFlag
-        , int numberOfLinksFlag
-        , int permissionFlag
-        , int sizeFlag
-        , int fileTypeFlag
-        , int uidFlag
-        , int lflag
-        , int indentSize
-        , int currentIndentSize
-        ) {
-    int index;
-    struct dirent *de;
-    DIR *dr = opendir(directory);
-    if (dr == NULL) {
-        char str[1000];
-        strcpy(str, directory);
-        printError(strcat(str, " is not a directory"));
-        return;
-    }
-    while ((de = readdir(dr)) != NULL) {
-        for (index = 0; index < currentIndentSize; index++) {
-            printf(" ");
-        }
-        printf("%s", de->d_name);
-        for(index = 0; index < 60 - strlen(de->d_name) - currentIndentSize; index++) {
-            printf(" ");
-        }
-        pintFileStat(de->d_name);
-        printf("\n");
-        if (de->d_type == 4 && (strncmp(de->d_name, ".", 1) != 0) && (strncmp(de->d_name, "..", 2) != 0)) {
-            char newDir[1000];
-            strcpy(newDir, directory);
-            strcat(newDir, "/");
-            strcat(newDir, de->d_name);
-            printDir(newDir, symbolicLinkFlag, timeFlag, gidFlag, numberOfLinksFlag, permissionFlag, sizeFlag, fileTypeFlag, uidFlag, lflag, indentSize, currentIndentSize + indentSize);
-        }
-    }
-    closedir(dr);
-    return;
-}
 
-void pintFileStat(char* fileName) {
-    struct stat fileStat;
-    if(stat(fileName,&fileStat) < 0)
-        return;
-
-    printf("%lld bytes",fileStat.st_size);
-    printf(" %d links",fileStat.st_nlink);
-    printf(" %llu nodes",fileStat.st_ino);
-
-    printf( (S_ISDIR(fileStat.st_mode)) ? "d" : "-");
-    printf( (fileStat.st_mode & S_IRUSR) ? "r" : "-");
-    printf( (fileStat.st_mode & S_IWUSR) ? "w" : "-");
-    printf( (fileStat.st_mode & S_IXUSR) ? "x" : "-");
-    printf( (fileStat.st_mode & S_IRGRP) ? "r" : "-");
-    printf( (fileStat.st_mode & S_IWGRP) ? "w" : "-");
-    printf( (fileStat.st_mode & S_IXGRP) ? "x" : "-");
-    printf( (fileStat.st_mode & S_IROTH) ? "r" : "-");
-    printf( (fileStat.st_mode & S_IWOTH) ? "w" : "-");
-    printf( (fileStat.st_mode & S_IXOTH) ? "x" : "-");
-}
-
-void printError(char* message) {
-    char str[1000];
-    strcpy(str, "dt: Error: ");
-    perror(strcat(str, message));
-}
