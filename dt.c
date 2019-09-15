@@ -18,6 +18,7 @@ void printDir(
         , int uidFlag
         , int lflag
         , int indentSize
+        , int currentIndentSize
 );
 int main(int argc, char *argv[]) {
     int symbolicLinkFlag = 0, timeFlag = 0, gidFlag = 0, numberOfLinksFlag = 0, permissionFlag = 0, sizeFlag = 0, fileTypeFlag = 0, uidFlag = 0, lflag = 0, indentSize = 4;
@@ -85,7 +86,7 @@ int main(int argc, char *argv[]) {
     } else {
         strcpy(directory, argv[optind]);
     }
-    printDir(directory, symbolicLinkFlag, timeFlag, gidFlag, numberOfLinksFlag, permissionFlag, sizeFlag, fileTypeFlag, uidFlag, lflag, indentSize);
+    printDir(directory, symbolicLinkFlag, timeFlag, gidFlag, numberOfLinksFlag, permissionFlag, sizeFlag, fileTypeFlag, uidFlag, lflag, indentSize, 1);
     return 0;
 }
 
@@ -101,6 +102,7 @@ void printDir(
         , int uidFlag
         , int lflag
         , int indentSize
+        , int currentIndentSize
         ) {
     int index;
     struct dirent *de;
@@ -112,16 +114,20 @@ void printDir(
         return;
     }
     while ((de = readdir(dr)) != NULL) {
-        for (index = 0; index < indentSize; index++) {
+        for (index = 0; index < currentIndentSize; index++) {
             printf(" ");
         }
-        printf("%s\t\t\t\t\t%hhu\n", de->d_name, de->d_type);
+        printf("%s", de->d_name);
+        for(index = 0; index < 60 - strlen(de->d_name) - currentIndentSize; index++) {
+            printf(" ");
+        }
+        printf("%hhu\n", de->d_type);
         if (de->d_type == 4 && (strncmp(de->d_name, ".", 1) != 0) && (strncmp(de->d_name, "..", 2) != 0)) {
             char newDir[1000];
             strcpy(newDir, directory);
             strcat(newDir, "/");
             strcat(newDir, de->d_name);
-            printDir(newDir, symbolicLinkFlag, timeFlag, gidFlag, numberOfLinksFlag, permissionFlag, sizeFlag, fileTypeFlag, uidFlag, lflag, indentSize + 4);
+            printDir(newDir, symbolicLinkFlag, timeFlag, gidFlag, numberOfLinksFlag, permissionFlag, sizeFlag, fileTypeFlag, uidFlag, lflag, indentSize, currentIndentSize + indentSize);
         }
     }
     closedir(dr);
