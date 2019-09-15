@@ -4,6 +4,8 @@
 #include <ctype.h>
 #include <string.h>
 #include <dirent.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 void printError(char* message);
 void printDir(
@@ -20,6 +22,9 @@ void printDir(
         , int indentSize
         , int currentIndentSize
 );
+void pintFileStat(char* fileName);
+
+
 int main(int argc, char *argv[]) {
     int symbolicLinkFlag = 0, timeFlag = 0, gidFlag = 0, numberOfLinksFlag = 0, permissionFlag = 0, sizeFlag = 0, fileTypeFlag = 0, uidFlag = 0, lflag = 0, indentSize = 4;
     int opt;
@@ -121,7 +126,8 @@ void printDir(
         for(index = 0; index < 60 - strlen(de->d_name) - currentIndentSize; index++) {
             printf(" ");
         }
-        printf("%hhu\n", de->d_type);
+        pintFileStat(de->d_name);
+        printf("\n");
         if (de->d_type == 4 && (strncmp(de->d_name, ".", 1) != 0) && (strncmp(de->d_name, "..", 2) != 0)) {
             char newDir[1000];
             strcpy(newDir, directory);
@@ -132,6 +138,27 @@ void printDir(
     }
     closedir(dr);
     return;
+}
+
+void pintFileStat(char* fileName) {
+    struct stat fileStat;
+    if(stat(fileName,&fileStat) < 0)
+        return;
+
+    printf("%lld bytes",fileStat.st_size);
+    printf(" %d links",fileStat.st_nlink);
+    printf(" %llu nodes",fileStat.st_ino);
+
+    printf( (S_ISDIR(fileStat.st_mode)) ? "d" : "-");
+    printf( (fileStat.st_mode & S_IRUSR) ? "r" : "-");
+    printf( (fileStat.st_mode & S_IWUSR) ? "w" : "-");
+    printf( (fileStat.st_mode & S_IXUSR) ? "x" : "-");
+    printf( (fileStat.st_mode & S_IRGRP) ? "r" : "-");
+    printf( (fileStat.st_mode & S_IWGRP) ? "w" : "-");
+    printf( (fileStat.st_mode & S_IXGRP) ? "x" : "-");
+    printf( (fileStat.st_mode & S_IROTH) ? "r" : "-");
+    printf( (fileStat.st_mode & S_IWOTH) ? "w" : "-");
+    printf( (fileStat.st_mode & S_IXOTH) ? "x" : "-");
 }
 
 void printError(char* message) {
