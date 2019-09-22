@@ -1,7 +1,7 @@
 
 # Link command:
-dt: dt.o helpers/printDir.o helpers/printError.o helpers/printFileStat.o
-	gcc dt.o helpers/printDir.o helpers/printError.o helpers/printFileStat.o -o dt
+dt: dt.o helpers/printDir.o helpers/printError.o helpers/printFileStat.o helpers/printHelp.o
+	gcc dt.o helpers/printDir.o helpers/printError.o helpers/printFileStat.o helpers/printHelp.o -o dt
 
 # Compilation commands:
 %.o : %.c

@@ -1,5 +1,6 @@
 void printDir(
-        char* directory
+        char* executableName
+        , char* directory
         , int symbolicLinkFlag
         , int timeFlag
         , int gidFlag

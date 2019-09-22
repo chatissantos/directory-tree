@@ -4,6 +4,7 @@
 #include <string.h>
 #include "helpers/printError.h"
 #include "helpers/printDir.h"
+#include "helpers/printHelp.h"
 
 int main(int argc, char *argv[]) {
     int symbolicLinkFlag = 0, timeFlag = 0, gidFlag = 0, numberOfLinksFlag = 0, permissionFlag = 0, sizeFlag = 0, fileTypeFlag = 0, uidFlag = 0, lflag = 0, indentSize = 4;
@@ -13,7 +14,7 @@ int main(int argc, char *argv[]) {
     while((opt = getopt(argc, argv, "hI:Ldgipstul")) != -1) {
         switch(opt) {
             case 'h':
-                printf("print help and exit\n");
+                printHelp();
                 return 0;
             case 'I':
                 if ((indentSize = atoi(optarg)) == 0) {
@@ -61,7 +62,7 @@ int main(int argc, char *argv[]) {
     } else {
         strcpy(directory, argv[optind]);
     }
-    printDir(directory, symbolicLinkFlag, timeFlag, gidFlag, numberOfLinksFlag, permissionFlag, sizeFlag, fileTypeFlag, uidFlag, lflag, indentSize, 1);
+    printDir(argv[0], directory, symbolicLinkFlag, timeFlag, gidFlag, numberOfLinksFlag, permissionFlag, sizeFlag, fileTypeFlag, uidFlag, lflag, indentSize, 1);
     return 0;
 }
 

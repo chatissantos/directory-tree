@@ -6,7 +6,8 @@
 #include "printError.h"
 
 void printDir(
-        char* directory
+        char* executableName
+        , char* directory
         , int symbolicLinkFlag
         , int timeFlag
         , int gidFlag
@@ -25,7 +26,7 @@ void printDir(
     if (dr == NULL) {
         char str[1000];
         strcpy(str, directory);
-        printError(strcat(str, " is not a directory"));
+        printError(strcat(str, " is not a directory"), executableName);
         return;
     }
     while ((de = readdir(dr)) != NULL) {
@@ -43,7 +44,7 @@ void printDir(
         printFileStat(newDir);
         printf("\n");
         if (de->d_type == 4 && (strncmp(de->d_name, ".", 1) != 0) && (strncmp(de->d_name, "..", 2) != 0)) {
-            printDir(newDir, symbolicLinkFlag, timeFlag, gidFlag, numberOfLinksFlag, permissionFlag, sizeFlag, fileTypeFlag, uidFlag, lflag, indentSize, currentIndentSize + indentSize);
+            printDir(executableName, newDir, symbolicLinkFlag, timeFlag, gidFlag, numberOfLinksFlag, permissionFlag, sizeFlag, fileTypeFlag, uidFlag, lflag, indentSize, currentIndentSize + indentSize);
         }
     }
     closedir(dr);
