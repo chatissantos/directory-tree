@@ -1,1 +1,1 @@
-void printError(char* message);
+void printError(char* message, char* executableName);

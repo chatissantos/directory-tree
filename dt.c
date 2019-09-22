@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
                 return 0;
             case 'I':
                 if ((indentSize = atoi(optarg)) == 0) {
-                    printError("Argument supplied to option I is not a number");
+                    printError("Argument supplied to option I is not a number", argv[0]);
                     return -1;
                 }
                 break;
@@ -48,11 +48,11 @@ int main(int argc, char *argv[]) {
             case 'l':
                 lflag = 1;
                 break;
-            case ':':
-                printError("option needs a value");
-                return -1;
             case '?':
-                printf("unknown option: %c\n", optopt);
+                if (optopt == 'I')
+                    printError("Option -I requires an argument", argv[0]);
+                else
+                    printError("unknown option", argv[0]);
                 return -1;
         }
     }
