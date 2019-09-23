@@ -9,8 +9,6 @@
 int main(int argc, char *argv[]) {
     int symbolicLinkFlag = 0, timeFlag = 0, gidFlag = 0, numberOfLinksFlag = 0, permissionFlag = 0, sizeFlag = 0, fileTypeFlag = 0, uidFlag = 0, lflag = 0, indentSize = 4;
     int opt;
-    int index;
-    char* directory;
     while((opt = getopt(argc, argv, "hI:Ldgipstul")) != -1) {
         switch(opt) {
             case 'h':
@@ -58,11 +56,10 @@ int main(int argc, char *argv[]) {
         }
     }
     if (optind == argc) {
-        strcpy(directory, ".");
+        printDir(argv[0], ".", symbolicLinkFlag, timeFlag, gidFlag, numberOfLinksFlag, permissionFlag, sizeFlag, fileTypeFlag, uidFlag, lflag, indentSize, 1);
     } else {
-        strcpy(directory, argv[optind]);
+        printDir(argv[0], argv[optind], symbolicLinkFlag, timeFlag, gidFlag, numberOfLinksFlag, permissionFlag, sizeFlag, fileTypeFlag, uidFlag, lflag, indentSize, 1);
     }
-    printDir(argv[0], directory, symbolicLinkFlag, timeFlag, gidFlag, numberOfLinksFlag, permissionFlag, sizeFlag, fileTypeFlag, uidFlag, lflag, indentSize, 1);
     return 0;
 }
 
