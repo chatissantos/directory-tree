@@ -1,1 +1,20 @@
-Command line tool for printing a directory hierarchy
+#Command line tool for printing a directory hierarchy
+
+
+
+##The program is invoked by:\n\t\t dt [-h] [-I n] [-L -d -g -i -p -s -t -u | -l] [dirname]
+
+
+The options are to be interpreted as follows:
+h Print a help message and exit.
+I n Change indentation to n spaces for each level.
+L Follow symbolic links, if any. Default will be to not follow symbolic links.
+t Print information on file type.
+p Print permission bits as rwxrwxrwx.
+i Print the number of links to file in inode table.
+u Print the uid associated with the file.
+g Print the gid associated with the file.
+s Print the size of file in bytes. If the size is larger than 1K, indicate the size in KB with a suffix K; if the size is larger than 1M, indicate the size in MB with a suffix M; if the size is larger than 1G, indicate the size in GB with a suffix G.
+d Show the time of last modification.
+l This option will be used to print information on the file as if the options tpiugs are all specified.
+If the user does not specify dirname, run the command using current directory and print the tree accordingly.
