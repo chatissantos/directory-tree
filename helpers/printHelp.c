@@ -2,7 +2,7 @@
 #include "printHelp.h"
 
 void printHelp() {
-    printf("The program will be invoked by:\n\t\t dt [-h] [-I n] [-L -d -g -i -p -s -t -u | -l] [dirname]\n");
+    printf("The program is invoked by:\n\t\t dt [-h] [-I n] [-L -d -g -i -p -s -t -u | -l] [dirname]\n");
     printf("\nThe options are to be interpreted as follows:\n");
     printf("h Print a help message and exit.\n");
     printf("I n Change indentation to n spaces for each level.\n");
@@ -16,6 +16,5 @@ void printHelp() {
     printf("d Show the time of last modification.\n");
     printf("l This option will be used to print information on the file as if the options tpiugs are all specified.\n");
     printf("If the user does not specify dirname, run the command using current directory and print the tree accordingly.\n");
-    return;
 }
 
