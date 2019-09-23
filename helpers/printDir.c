@@ -41,7 +41,7 @@ void printDir(
         strcpy(newDir, directory);
         strcat(newDir, "/");
         strcat(newDir, de->d_name);
-        printFileStat(newDir);
+        printFileStat(newDir, timeFlag, gidFlag, numberOfLinksFlag, permissionFlag, sizeFlag, fileTypeFlag, uidFlag, lflag);
         printf("\n");
         if (de->d_type == 4 && (strncmp(de->d_name, ".", 1) != 0) && (strncmp(de->d_name, "..", 2) != 0)) {
             printDir(executableName, newDir, symbolicLinkFlag, timeFlag, gidFlag, numberOfLinksFlag, permissionFlag, sizeFlag, fileTypeFlag, uidFlag, lflag, indentSize, currentIndentSize + indentSize);
@@ -50,4 +50,3 @@ void printDir(
     closedir(dr);
     return;
 }
-
